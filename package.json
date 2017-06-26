@@ -1,9 +1,10 @@
 {
-  "name": "angular2-seed",
+  "name": "shallow-thought",
   "version": "1.0.0",
-  "description": "A simple starter Angular2 project",
+  "description": "A chess playing engine with UI in Angular2",
   "scripts": {
     "build": "webpack --progress",
+    "prodbuild": "webpack -p --progress",
     "watch": "npm run build -- --watch",
     "server": "webpack-dev-server --inline --progress --port 3000 --content-base src",
     "start": "npm run server",
@@ -11,8 +12,7 @@
     "tscw": "tsc -w"
   },
   "contributors": [
-    "Rob Wormald <robwormald@gmail.com>",
-    "PatrickJS <github@gdi2290.com>"
+    "Carl Johansen <carl@carljohansen.co.uk>"
   ],
   "license": "MIT",
   "dependencies": {
@@ -21,13 +21,7 @@
     "@angular/compiler-cli": "~2.2.1",
     "@angular/core": "~2.2.1",
     "@angular/forms": "~2.2.1",
-    "@angular/http": "~2.2.1",
     "@angular/platform-browser": "~2.2.1",
-    "@angular/platform-browser-dynamic": "~2.2.1",
-    "@angular/platform-server": "~2.2.1",
-    "@angular/router": "~3.2.1",
-    "@angular/upgrade": "~2.2.1",
-    "angular2-in-memory-web-api": "0.0.21",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "ie-shim": "^0.1.0",
@@ -54,17 +48,16 @@
     "webpack-merge": "^0.15.0"
   },
   "keywords": [
+    "Shallow Thought",
     "Angular2",
-    "angular2-seed",
-    "official angular 2 seed",
-    "official angular2 seed"
+    "chess"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/angular/angular2-seed.git"
+    "url": "git+https://github.com/carljohansen/shallow-thought"
   },
   "bugs": {
-    "url": "https://github.com/angular/angular2-seed/issues"
+    "url": "https://github.com/carljohansen/shallow-thought/issues"
   },
-  "homepage": "https://github.com/angular/angular2-seed#readme"
+  "homepage": "https://github.com/carljohansen/shallow-thought#readme"
 }
