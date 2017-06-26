@@ -1,0 +1,15 @@
+<div class="toolbar">
+    <button (click)="startNew()">Restart</button>
+    <progress [value]="activePlayerProgress" max="100"></progress>
+</div>
+
+<div class="boardgrid">
+    <div [square]="boardSquare" *ngFor="let boardSquare of boardSquares" (selected)="onSquareSelected($event)">
+    </div>
+
+    <piece *ngFor="let occupiedSquare of occupiedSquares" [squarePiece]="occupiedSquare">
+    </piece>
+</div>
+<div #movelist class="movelist">
+    <move-list [moves]="moveHistory"></move-list>
+</div>
