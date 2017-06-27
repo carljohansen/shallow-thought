@@ -8,7 +8,7 @@ Since this is primarily a learning exercise, it's accompanied by a series of art
 
 Here's a screenshot showing Shallow Thought (Black) getting pounded by Houdini (White)!
 
-![Shallow Thought game screenshot](https://carljohansen.files.wordpress.com/2017/06/screenshot1.png)
+![Shallow Thought game screenshot](https://carljohansen.files.wordpress.com/2017/06/screenshot2.png)
 
 ### Disclaimer
 This is my first serious attempt at using Angular 2.  Coming from a Visual Studio background, this project was also my first use of the following:
