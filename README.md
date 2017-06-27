@@ -1,10 +1,10 @@
 # Shallow Thought
-Demonstration of a chess playing engine in Angular 2.
+Demonstration of a chess playing engine in Angular 2.  Please see [here](https://carljohansen.wordpress.com/2017/06/26/shallow-thought-an-angular-2-chess-player/) for an in-depth discussion of the code.
 
 ## Introduction
 This is a bit of fun to show some Angular 2 concepts PLUS a chess engine - all in one package.  In homage to 'Deep Thought' (the granddaddy of chess engines) and in honest recognition of my engine's feeble playing strength, I have named it Shallow Thought.  I hope you enjoy playing around with it as much as I enjoyed building it.
 
-Since this is primarily a learning exercise, it's accompanied by a series of articles that will hopefully explain what's happening.  The content page for the articles is [here](https://carljohansen.wordpress.com/2017/06/26/shallow-thought-an-angular-2-chess-player/).
+Since this is primarily a learning exercise, it's accompanied by a series of articles that will hopefully explain what's happening (see link above).
 
 Here's a screenshot showing Shallow Thought (Black) getting pounded by Houdini (White)!
 
