@@ -6,6 +6,10 @@ This is a bit of fun to show some Angular 2 concepts PLUS a chess engine - all i
 
 Since this is primarily a learning exercise, it's accompanied by a series of articles that will hopefully explain what's happening.  The content page for the articles is [here](https://carljohansen.wordpress.com/2017/06/26/shallow-thought-an-angular-2-chess-player/).
 
+Here's a screenshot showing Shallow Thought (Black) getting pounded by Houdini (White)!
+
+[[https://carljohansen.files.wordpress.com/2017/06/screenshot1.png|alt=Screenshot]]
+
 ### Disclaimer
 This is my first serious attempt at using Angular 2.  Coming from a Visual Studio background, this project was also my first use of the following:
 * Node.js
