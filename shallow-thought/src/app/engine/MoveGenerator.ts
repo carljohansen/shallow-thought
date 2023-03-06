@@ -8,8 +8,11 @@ export default class MoveGenerator {
     private static rookVectors = [[0, 1], [0, -1], [1, 0], [-1, 0]];
     private static bishopVectors = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
 
-    public static getPotentialKnightMoves(board: Chess.Board, fromSquare: Chess.BoardSquare, findKingCaptureOnly?: boolean): Chess.GameMove[] {
-        let result: Chess.GameMove[] = [];
+    public static getPotentialKnightMoves(board: Chess.Board,
+        fromSquare: Chess.BoardSquare,
+        findKingCaptureOnly: boolean,
+        output: Chess.GameMove[],
+        currentIndex: number): number {
         const opponentColour = board.isWhiteToMove ? Chess.Player.Black : Chess.Player.White;
         for (let i = 0; i < 8; i++) {
             const currVector = MoveGenerator.knightVectors[i];
@@ -22,24 +25,32 @@ export default class MoveGenerator {
                     || destSquare.player === opponentColour) {
 
                     if (findKingCaptureOnly && (capturePiece === Chess.PieceType.King)) {
-                        return []; // Non-null indicates king capture exists.
+                        return 0; // Non-null indicates king capture exists.
                     }
-                    result.push({
-                        fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
-                        isCapture: capturePiece !== Chess.PieceType.None,
-                        piece: Chess.PieceType.Knight,
-                        isTheoreticalKingCapture: destSquare.piece === Chess.PieceType.King
-                    });
+                    if (!findKingCaptureOnly) {
+                        output[currentIndex++] = {
+                            fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
+                            isCapture: capturePiece !== Chess.PieceType.None,
+                            piece: Chess.PieceType.Knight,
+                            isTheoreticalKingCapture: destSquare.piece === Chess.PieceType.King
+                        };
+                    }
                 }
             }
         }
         if (findKingCaptureOnly) {
-            return null;
+            return -1;
         }
-        return result;
+        return currentIndex;
     }
 
-    public static getPotentialPawnMoves(board: Chess.Board, fromSquare: Chess.BoardSquare, includeSquareAttacks: boolean, findKingCaptureOnly?: boolean): Chess.GameMove[] {
+    public static getPotentialPawnMoves(board: Chess.Board,
+        fromSquare: Chess.BoardSquare,
+        includeSquareAttacks: boolean,
+        findKingCaptureOnly: boolean,
+        output: Chess.GameMove[],
+        currentIndex: number): number {
+        const startIndex = currentIndex;
         let result: Chess.GameMove[] = [];
         const opponentColour = board.isWhiteToMove ? Chess.Player.Black : Chess.Player.White;
         const direction = board.isWhiteToMove ? 1 : -1;
@@ -65,24 +76,26 @@ export default class MoveGenerator {
                     && destSquare.player === opponentColour) {
 
                     if (findKingCaptureOnly && (capturePiece === Chess.PieceType.King)) {
-                        return []; // Non-null indicates king capture exists.
+                        return 0; // Non-null indicates king capture exists.
                     }
-                    result.push({
-                        fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
-                        isCapture: true,
-                        isTheoreticalKingCapture: capturePiece === Chess.PieceType.King
-                    });
+                    if (!findKingCaptureOnly) {
+                        output[currentIndex++] = {
+                            fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
+                            isCapture: true,
+                            isTheoreticalKingCapture: capturePiece === Chess.PieceType.King
+                        };
+                    }
                 } else if (includeSquareAttacks && capturePiece === Chess.PieceType.None) {
-                    result.push({
+                    output[currentIndex++] = {
                         fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
                         isPawnAttack: true
-                    });
+                    };
                 }
             }
         }
 
         if (findKingCaptureOnly) {
-            return null;
+            return -1;
         }
 
         const potentialTwoPush = (board.isWhiteToMove && fromSquare.rank === 2) || (!board.isWhiteToMove && fromSquare.rank === 7);
@@ -97,11 +110,11 @@ export default class MoveGenerator {
                 if (blockingPiece !== Chess.PieceType.None) {
                     break;
                 }
-                result.push({
+                output[currentIndex++] = {
                     fromSquare: fromSquare,
                     toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
                     sideEffect: (i === 2) ? Chess.MoveSideEffect.EnablesEnPassantCapture : Chess.MoveSideEffect.None
-                });
+                };
 
             }
             if (!potentialTwoPush) {
@@ -110,16 +123,19 @@ export default class MoveGenerator {
         }
 
         const promotionRank = board.isWhiteToMove ? 8 : 1;
-        for (let i = 0; i < result.length; i++) {
-            if (result[i].toSquare.rank === promotionRank) {
-                result[i].sideEffect = Chess.MoveSideEffect.PromoteToQueen;
+        for (let i = startIndex; i < currentIndex; i++) {
+            if (output[i].toSquare.rank === promotionRank) {
+                output[i].sideEffect = Chess.MoveSideEffect.PromoteToQueen;
             }
         }
-        return result;
+        return currentIndex;
     }
 
-    public static getPotentialKingMoves(board: Chess.Board, fromSquare: Chess.BoardSquare, findKingCaptureOnly?: boolean): Chess.GameMove[] {
-        let result: Chess.GameMove[] = [];
+    public static getPotentialKingMoves(board: Chess.Board,
+        fromSquare: Chess.BoardSquare,
+        findKingCaptureOnly: boolean,
+        output: Chess.GameMove[],
+        currentIndex: number): number {
         const opponentColour = board.isWhiteToMove ? Chess.Player.Black : Chess.Player.White;
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
@@ -135,23 +151,25 @@ export default class MoveGenerator {
                         || destSquare.player === opponentColour) {
 
                         if (findKingCaptureOnly && (capturePiece === Chess.PieceType.King)) {
-                            return []; // Non-null indicates king capture exists.
+                            return 0; // Non-null indicates king capture exists.
                         }
 
-                        result.push({
-                            fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
-                            piece: Chess.PieceType.King,
-                            isCapture: capturePiece !== Chess.PieceType.None,
-                            isTheoreticalKingCapture: capturePiece === Chess.PieceType.King,
-                            sideEffect: Chess.MoveSideEffect.NullifiesKingsideCastling | Chess.MoveSideEffect.NullifiesQueensideCastling
-                        });
+                        if (!findKingCaptureOnly) {
+                            output[currentIndex++] = {
+                                fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
+                                piece: Chess.PieceType.King,
+                                isCapture: capturePiece !== Chess.PieceType.None,
+                                isTheoreticalKingCapture: capturePiece === Chess.PieceType.King,
+                                sideEffect: Chess.MoveSideEffect.NullifiesKingsideCastling | Chess.MoveSideEffect.NullifiesQueensideCastling
+                            };
+                        }
                     }
                 }
             }
         }
 
         if (findKingCaptureOnly) {
-            return null;
+            return -1;
         }
 
         // Deal with castling.
@@ -194,18 +212,23 @@ export default class MoveGenerator {
                         let transitCheckMove: Chess.GameMove = { fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(transitFile, castlingRank) };
                         let transitCheckBoard = board.applyMove(transitCheckMove);
                         if (!transitCheckBoard.playerHasTheoreticalKingCapture()) {
-                            result.push({
+                            output[currentIndex++] = {
                                 fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(destFile, castlingRank)
-                            });
+                            };
                         }
                     }
                 }
             }
         }
-        return result;
+        return currentIndex;
     }
 
-    public static getPotentialRookMoves(board: Chess.Board, fromSquare: Chess.BoardSquare, inRookContext: boolean, findKingCaptureOnly?: boolean): Chess.GameMove[] {
+    public static getPotentialRookMoves(board: Chess.Board,
+        fromSquare: Chess.BoardSquare,
+        inRookContext: boolean,
+        findKingCaptureOnly: boolean,
+        output: Chess.GameMove[],
+        currentIndex: number): number {
 
         let castlingEffect = Chess.MoveSideEffect.None;
         if (inRookContext) {
@@ -217,7 +240,6 @@ export default class MoveGenerator {
             }
         }
 
-        let result: Chess.GameMove[] = [];
         const opponentColour = board.isWhiteToMove ? Chess.Player.Black : Chess.Player.White;
         for (let i = 0; i < 4; i++) {
             for (let j = 1; j <= 7; j++) {
@@ -233,16 +255,18 @@ export default class MoveGenerator {
                     || destSquare.player === opponentColour) {
 
                     if (findKingCaptureOnly && (capturePiece === Chess.PieceType.King)) {
-                        return []; // Non-null indicates king capture exists.
+                        return 0; // Non-null indicates king capture exists.
                     }
 
-                    result.push({
-                        fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
-                        isCapture: capturePiece !== Chess.PieceType.None,
-                        piece: inRookContext ? Chess.PieceType.Rook : Chess.PieceType.Queen,
-                        isTheoreticalKingCapture: destSquare.piece === Chess.PieceType.King,
-                        sideEffect: castlingEffect
-                    });
+                    if (!findKingCaptureOnly) {
+                        output[currentIndex++] = {
+                            fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
+                            isCapture: capturePiece !== Chess.PieceType.None,
+                            piece: inRookContext ? Chess.PieceType.Rook : Chess.PieceType.Queen,
+                            isTheoreticalKingCapture: destSquare.piece === Chess.PieceType.King,
+                            sideEffect: castlingEffect
+                        };
+                    }
                 }
                 if (capturePiece !== Chess.PieceType.None) {
                     break; // the way is blocked.
@@ -250,13 +274,17 @@ export default class MoveGenerator {
             }
         }
         if (findKingCaptureOnly) {
-            return null;
+            return -1;
         }
-        return result;
+        return currentIndex;
     }
 
-    public static getPotentialBishopMoves(board: Chess.Board, fromSquare: Chess.BoardSquare, inBishopContext: boolean, findKingCaptureOnly?: boolean): Chess.GameMove[] {
-        let result: Chess.GameMove[] = [];
+    public static getPotentialBishopMoves(board: Chess.Board,
+        fromSquare: Chess.BoardSquare,
+        inBishopContext: boolean,
+        findKingCaptureOnly: boolean,
+        output: Chess.GameMove[],
+        currentIndex: number): number {
         const opponentColour = board.isWhiteToMove ? Chess.Player.Black : Chess.Player.White;
         for (let i = 0; i < 4; i++) {
             for (let j = 1; j <= 7; j++) {
@@ -272,14 +300,16 @@ export default class MoveGenerator {
                     || destSquare.player === opponentColour) {
 
                     if (findKingCaptureOnly && (capturePiece === Chess.PieceType.King)) {
-                        return []; // Non-null indicates king capture exists.
+                        return 0; // Non-null indicates king capture exists.
                     }
-                    result.push({
-                        fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
-                        piece: inBishopContext ? Chess.PieceType.Bishop : Chess.PieceType.Queen,
-                        isCapture: capturePiece !== Chess.PieceType.None,
-                        isTheoreticalKingCapture: destSquare.piece === Chess.PieceType.King
-                    });
+                    if (!findKingCaptureOnly) {
+                        output[currentIndex++] = {
+                            fromSquare: fromSquare, toSquare: Chess.BoardResources.byFileAndRank(newFile, newRank),
+                            piece: inBishopContext ? Chess.PieceType.Bishop : Chess.PieceType.Queen,
+                            isCapture: capturePiece !== Chess.PieceType.None,
+                            isTheoreticalKingCapture: destSquare.piece === Chess.PieceType.King
+                        };
+                    }
                 }
                 if (capturePiece !== Chess.PieceType.None) {
                     break; // the way is blocked.
@@ -287,25 +317,28 @@ export default class MoveGenerator {
             }
         }
         if (findKingCaptureOnly) {
-            return null;
+            return -1;
         }
-        return result;
+        return currentIndex;
     }
 
-    public static getPotentialQueenMoves(board: Chess.Board, fromSquare: Chess.BoardSquare, findKingCaptureOnly?: boolean): Chess.GameMove[] {
+    public static getPotentialQueenMoves(board: Chess.Board,
+        fromSquare: Chess.BoardSquare,
+        findKingCaptureOnly: boolean,
+        output: Chess.GameMove[],
+        currentIndex: number): number {
 
         if (findKingCaptureOnly) {
-            if (MoveGenerator.getPotentialBishopMoves(board, fromSquare, false, true) !== null) {
-                return [];
+            if (MoveGenerator.getPotentialBishopMoves(board, fromSquare, false, true, output, currentIndex) >= 0) {
+                return 0;
             }
-            if (MoveGenerator.getPotentialRookMoves(board, fromSquare, false, true) !== null) {
-                return [];
+            if (MoveGenerator.getPotentialRookMoves(board, fromSquare, false, true, output, currentIndex) >= 0) {
+                return 0;
             }
-            return null;
+            return -1;
         }
 
-        return MoveGenerator.getPotentialRookMoves(board, fromSquare, false).concat(
-            MoveGenerator.getPotentialBishopMoves(board, fromSquare, false)
-        );
+        var secondIndex = MoveGenerator.getPotentialRookMoves(board, fromSquare, false, false, output, currentIndex);
+        return MoveGenerator.getPotentialBishopMoves(board, fromSquare, false, false, output, secondIndex);
     }
 }

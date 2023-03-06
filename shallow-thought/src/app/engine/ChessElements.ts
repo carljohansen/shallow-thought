@@ -259,37 +259,37 @@ export class Board {
     }
 
     public getPotentialMoves(includePawnAttacks?: boolean): GameMove[] {
-        let result: GameMove[] = [];
+        let result: GameMove[] = new Array(103); // probable maximum number of possible moves in a position.
         const currPlayer = this.isWhiteToMove ? Player.White : Player.Black;
+        let currentIndex = 0;
         this.forEachOccupiedSquare(occSquare => {
-            var pieceMoves: GameMove[];
             if (occSquare.piece.player === currPlayer) {
 
                 switch (occSquare.piece.piece) {
                     case PieceType.Knight:
-                        pieceMoves = MoveGenerator.getPotentialKnightMoves(this, occSquare.square);
+                        currentIndex = MoveGenerator.getPotentialKnightMoves(this, occSquare.square, false, result, currentIndex);
                         break;
                     case PieceType.Pawn:
-                        pieceMoves = MoveGenerator.getPotentialPawnMoves(this, occSquare.square, includePawnAttacks, false);
+                        currentIndex = MoveGenerator.getPotentialPawnMoves(this, occSquare.square, includePawnAttacks, false, result, currentIndex);
                         break;
                     case PieceType.King:
-                        pieceMoves = MoveGenerator.getPotentialKingMoves(this, occSquare.square);
+                        currentIndex = MoveGenerator.getPotentialKingMoves(this, occSquare.square, false, result, currentIndex);
                         break;
                     case PieceType.Queen:
-                        pieceMoves = MoveGenerator.getPotentialQueenMoves(this, occSquare.square);
+                        currentIndex = MoveGenerator.getPotentialQueenMoves(this, occSquare.square, false, result, currentIndex);
                         break;
                     case PieceType.Bishop:
-                        pieceMoves = MoveGenerator.getPotentialBishopMoves(this, occSquare.square, true);
+                        currentIndex = MoveGenerator.getPotentialBishopMoves(this, occSquare.square, true, false, result, currentIndex);
                         break;
                     case PieceType.Rook:
-                        pieceMoves = MoveGenerator.getPotentialRookMoves(this, occSquare.square, true);
+                        currentIndex = MoveGenerator.getPotentialRookMoves(this, occSquare.square, true, false, result, currentIndex);
                         break;
                     default:
-                        pieceMoves = [];
+                        break;
                 }
-                result = result.concat(pieceMoves);
             }
         });
+        result.length = currentIndex;
         return result;
     }
 
@@ -301,6 +301,7 @@ export class Board {
     }
 
     public playerHasTheoreticalKingCapture(): boolean {
+        let dummy: GameMove[] = [];
         const currPlayer = this.isWhiteToMove ? Player.White : Player.Black;
         var hasKingCapture = false;
         this.forEachOccupiedSquare(occSquare => {
@@ -308,27 +309,27 @@ export class Board {
 
                 switch (occSquare.piece.piece) {
                     case PieceType.Knight:
-                        if (MoveGenerator.getPotentialKnightMoves(this, occSquare.square, true) !== null)
+                        if (MoveGenerator.getPotentialKnightMoves(this, occSquare.square, true, dummy, 0) >= 0)
                             hasKingCapture = true;
                         break;
                     case PieceType.Pawn:
-                        if (MoveGenerator.getPotentialPawnMoves(this, occSquare.square, false, true) !== null)
+                        if (MoveGenerator.getPotentialPawnMoves(this, occSquare.square, false, true, dummy, 0) >= 0)
                             hasKingCapture = true;
                         break;
                     case PieceType.King:
-                        if (MoveGenerator.getPotentialKingMoves(this, occSquare.square, true) !== null)
+                        if (MoveGenerator.getPotentialKingMoves(this, occSquare.square, true, dummy, 0) >= 0)
                             hasKingCapture = true;
                         break;
                     case PieceType.Queen:
-                        if (MoveGenerator.getPotentialQueenMoves(this, occSquare.square, true) !== null)
+                        if (MoveGenerator.getPotentialQueenMoves(this, occSquare.square, true, dummy, 0) >= 0)
                             hasKingCapture = true;
                         break;
                     case PieceType.Bishop:
-                        if (MoveGenerator.getPotentialBishopMoves(this, occSquare.square, true, true) !== null)
+                        if (MoveGenerator.getPotentialBishopMoves(this, occSquare.square, true, true, dummy, 0) >= 0)
                             hasKingCapture = true;
                         break;
                     case PieceType.Rook:
-                        if (MoveGenerator.getPotentialRookMoves(this, occSquare.square, true, true) !== null)
+                        if (MoveGenerator.getPotentialRookMoves(this, occSquare.square, true, true, dummy, 0) >= 0)
                             hasKingCapture = true;
                         break;
                 }
