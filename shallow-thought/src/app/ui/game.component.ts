@@ -77,10 +77,6 @@ export class GameComponent implements OnInit {
 
         this.game.progressNotified.subscribe((progressPercentage: number) => {
             this.activePlayerProgress = progressPercentage;
-            try {
-                // Force a refresh of the progress bar.
-                this.appRef.tick();
-            } catch (ignoreThis) { }
         });
 
         this.game.resume();
