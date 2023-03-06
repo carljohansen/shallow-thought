@@ -38,3 +38,7 @@
 .toolbar {
     padding: 10px;
 }
+
+progress {
+    margin-left: 10px;
+}
