@@ -1,6 +1,5 @@
 ﻿/// <reference lib="webworker" />
 
-//import 'zone.js'
 import 'reflect-metadata';
 import { ComputerPlayer } from '../engine/Evaluation';
 import * as Chess from '../engine/ChessElements';
@@ -14,7 +13,7 @@ onmessage = function (event) {
 
     // Prepare a player object that will calculate the next move and tell us about its progress.
     var computerPlayer = new ComputerPlayer();
-    computerPlayer.calculationProgress.subscribe((progressPercentage: any) => {
+    computerPlayer.calculationProgress.subscribe((progressPercentage: number) => {
         (<any>self).postMessage("PROGRESS:" + progressPercentage);
     });
 

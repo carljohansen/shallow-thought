@@ -1,7 +1,6 @@
-﻿import { Input, Output, EventEmitter, Injectable } from '@angular/core';
+﻿import { Output, EventEmitter, Injectable } from '@angular/core';
 import { SquareComponent } from './square.component';
 import * as Chess from '../engine/ChessElements';
-import { ComputerPlayer } from '../engine/Evaluation';
 
 @Injectable()
 export abstract class PlayerBase {
@@ -87,8 +86,6 @@ export class ArtificialPlayer extends PlayerBase {
     activate(board: Chess.Board): void {
 
         if (!this.engineWorker) {
-            //this.engineWorker = new Worker("/engine.bundle.js");
-            //this.engineWorker = new Worker(new URL('./engine.bundle.js', import.meta.url));
             this.engineWorker = new Worker(new URL('./artificialPlayerDispatch.ts', import.meta.url));
         }
         this.progress.emit(0);

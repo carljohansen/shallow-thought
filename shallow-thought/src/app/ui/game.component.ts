@@ -1,6 +1,5 @@
 import { Component, OnInit, ApplicationRef, ViewChild } from '@angular/core';
 import { SquareComponent } from './square.component';
-//import { ProgressbarComponent } from 'ngx-bootstrap/progressbar';
 import * as Chess from '../engine/ChessElements';
 import { Game } from './game';
 import { ArtificialPlayer } from './playerBase';
