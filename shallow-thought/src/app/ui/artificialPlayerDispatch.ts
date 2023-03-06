@@ -14,9 +14,9 @@ onmessage = function (event) {
 
     // Prepare a player object that will calculate the next move and tell us about its progress.
     var computerPlayer = new ComputerPlayer();
-   // computerPlayer.calculationProgress.subscribe((progressPercentage: any) => {
-  //      (<any>self).postMessage("PROGRESS:" + progressPercentage);
-  //  });
+    computerPlayer.calculationProgress.subscribe((progressPercentage: any) => {
+        (<any>self).postMessage("PROGRESS:" + progressPercentage);
+    });
 
     var selectedMove = computerPlayer.getBestMove(board);
 

@@ -1,6 +1,5 @@
-﻿//import { EventEmitter, Output, Injectable } from '@angular/core';
+﻿import { Subject } from 'rxjs';
 import * as Chess from './ChessElements';
-//import MoveGenerator from './MoveGenerator';
 
 export interface MoveWithReplies {
     move: Chess.GameMove;
@@ -12,10 +11,10 @@ interface EvaluatedMove {
     score: number;
 }
 
-//@Injectable()
 export class ComputerPlayer {
 
-  //  @Output() calculationProgress: EventEmitter<number> = new EventEmitter();
+    private calculationProgressSource : Subject<number> = new Subject<number>();
+    public calculationProgress = this.calculationProgressSource.asObservable();
 
     public getMovesAndReplies(board: Chess.Board, headStartMoves: Chess.GameMove[]): MoveWithReplies[] {
 
@@ -78,7 +77,7 @@ export class ComputerPlayer {
         for (let move of movesAndReplies) {
 
             if (depth === 0) {
-               // this.calculationProgress.emit(Math.floor((movesEvaluated++ / numMoves) * 100));
+                this.calculationProgressSource.next(Math.floor((movesEvaluated++ / numMoves) * 100));
             }
 
             if (move.move.isPawnAttack) {
@@ -108,7 +107,7 @@ export class ComputerPlayer {
             }
         }
         if (depth === 0) {
-          //  this.calculationProgress.emit(100);
+            this.calculationProgressSource.next(100);
         }
 
         return { move: bestMoveSoFar, score: bestScoreSoFar };
