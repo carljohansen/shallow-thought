@@ -374,7 +374,10 @@ export class Board {
 
     public applyMove(move: GameMove): Board {
         const newBoard = new Board();
-        newBoard.squares = this.squares.slice();
+        newBoard.squares = [];
+        for (var i = 0; i < this.squares.length; i++) {
+            newBoard.squares[i] = this.squares[i];
+        }
         const fromIndex = move.fromSquare.index;
         const toIndex = move.toSquare.index;
         const movingPiece = newBoard.squares[fromIndex];
