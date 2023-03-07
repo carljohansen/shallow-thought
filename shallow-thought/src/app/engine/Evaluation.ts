@@ -13,7 +13,7 @@ interface EvaluatedMove {
 
 export class ComputerPlayer {
 
-    private calculationProgressSource : Subject<number> = new Subject<number>();
+    private calculationProgressSource: Subject<number> = new Subject<number>();
     public calculationProgress = this.calculationProgressSource.asObservable();
 
     public getMovesAndReplies(board: Chess.Board, headStartMoves: Chess.GameMove[]): MoveWithReplies[] {
@@ -103,6 +103,9 @@ export class ComputerPlayer {
 
             if (betaScore !== null
                 && ComputerPlayer.isBetterScore(lineEvaluation, betaScore, board.isWhiteToMove)) {
+                // This is the alpha-beta algorithm's optimization of the minimax algorithm.  We have found a reply that makes
+                // the current move worse than the best move that we have already found.  Therefore the current move has a 
+                // refutation and we can reject it right now (no need to find another refutation).
                 break;
             }
         }
