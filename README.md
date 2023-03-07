@@ -22,4 +22,14 @@ This is my first serious attempt at using Angular 15.  Coming from a Visual Stud
 I hope it's clear: this is not a masterclass in any of the above (or in writing chess engines, for that matter).  Your comments and suggestions are welcome.
 
 ## Building
-This project is based on the [Angular 2 seed](https://github.com/angular/angular2-seed), so if you have followed the steps and can build and run that project then you should be in pretty good shape to run Shallow Thought.
+To run the app follow these steps:
+
+1. Make sure you have a recent version of [Node.js/npm](https://nodejs.org/) installed.
+1. Download the master branch as a [zip file](https://github.com/carljohansen/shallow-thought/archive/refs/heads/master.zip) from GitHub.
+1. Extract it to a local folder.
+1. Start a Node.js command prompt.
+1. Switch to the 'shallow-thought' folder (the one that has /src as a sub-folder).
+1. run ```npm install``` and let it finish.
+1. run ```npm start``` and wait for it to show "compiled successfully."
+1. Open [http://localhost:4200](http://localhost:4200) in a browser (I find that Microsoft Edge gives the best performance).
+1. You play white and the computer plays black.  Click on a white piece and then click on the square to which you want to move it.
